@@ -1,11 +1,11 @@
 // Author: http://weibo.com/fanweixiao
 // Revision: http://weibo.com/lengleng3898
 // Version: 0.5
-
+// Edited by twd2 20160114
 (function() {
     "use strict";
 
-    var js_files = ["http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js", "http://lurongkai.github.io/anti-baidu/js/jquery.bpopup-0.8.0.min.js"];
+    var js_files = ["//lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js", "//twd2.net/anti-baidu/js/jquery.bpopup-0.8.0.min.js"];
 
     var jQueryLoader = function(loadSuccessCallback) {
         // Only do anything if jQuery isn't defined
@@ -35,16 +35,20 @@
                 }
                 loadSuccessCallback(jQuery);
             });
+        } else {
+            loadSuccessCallback(jQuery);
         }
     };
 
     var antiBaiduPopup = function($) {
-        $.getScript(js_files[1]);
         $(document).ready(function() {
-            var antiDiv = '<div id="nobaidu_dlg" style="background-color:#fff; border-radius:15px;color:#000;display:none;padding:20px;min-width:450px;min-height:180px;"><img src="http://lurongkai.github.com/anti-baidu/images/nobaidu.jpg" align="left"><p style="margin-left:200px;margin-top: 20px; line-height: 30px;">检测到你还在使用百度这个搜索引擎，<br>作为一个程序员，这是一种自暴自弃！<br><br></p><p align="center" style="margin-top:20px;"><b><a href="http://coolshell.cn/articles/9308.html">做环保的程序员，从不用百度开始！</a></b></p></div>';
+            var antiDiv = '<div id="nobaidu_dlg" style="background-color:#fff; border-radius:15px;color:#000;display:none;padding:20px;min-width:450px;min-height:180px;"><img src="//twd2.net/anti-baidu/images/nobaidu.jpg" align="left"><p style="margin-left:200px;margin-top: 20px; line-height: 30px;">检测到你还在使用百度这个搜索引擎，<br>作为一个程序员，这是一种自暴自弃！<br><br></p><p align="center" style="margin-top:20px;"><b><a href="http://coolshell.cn/articles/9308.html" target="_blank">做环保的程序员，从不用百度开始！</a></b></p></div>';
             $("body").append(antiDiv);
             // Actually, When antiBaidu Popup function be invoked, it is already proved that refer is Baidu.
-            $('#nobaidu_dlg').bPopup();
+            $.getScript(js_files[1])
+                .done(function(script, textStatus) {
+                    $('#nobaidu_dlg').bPopup();          
+                });
         });
     };
 
@@ -54,7 +58,7 @@
 
     var isReferBaidu = function() {
         var url = document.referrer;
-        if (url && url.search("http://") > -1) {
+        if (url && (url.search("http://") > -1 || url.search("https://") > -1)) {
             var refurl =  url.match(/:\/\/(.[^/]+)/)[1];
             if (refurl.indexOf("baidu.com") > -1) {
                 return true;
